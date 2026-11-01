@@ -58,6 +58,29 @@ Lưu ý: Blueprint đang quản lý `MODEL_MODE=mock` và `ALLOW_EXTERNAL_MODEL=
 
 ## 5. Chạy Docker trên máy
 
+### Demo trên gói Free
+
+Service `SK_Vin` đang tạo thủ công trên Render có thể giữ gói Free để thử với dữ liệu giả. Không áp dụng Blueprint trả phí ở mục 2 nếu bạn muốn giữ Free. Không gắn persistent disk ở chế độ này; mọi dữ liệu và phiên demo có thể mất khi Render dừng, khởi động lại hoặc deploy service. Để dùng lại lớp mẫu, vào Quản trị → Nạp lớp mẫu. Chưa được dùng cho hồ sơ thật hoặc cam kết lưu trữ.
+
+Giữ `MODEL_MODE=mock`, `MAX_MODEL_CONCURRENCY=1`, và đặt `NODE_OPTIONS=--max-old-space-size=64` trong Render Environment. App khởi tạo PGlite với 32 MiB thay mức mặc định 128 MiB; PGlite vẫn tự tăng bộ nhớ khi cần. Đây không phải giới hạn tổng RAM của process. Đừng tự nâng giới hạn heap trên instance 512 MiB mà chưa đo lại bộ nhớ.
+
+Lần truy cập đầu có thể chậm do service ngủ và DB mới cần khởi tạo. Chưa cam kết phục vụ 40 học sinh chat đồng thời trên Free. Khi gặp lỗi 502/restart, kiểm tra Render Events có `oomKilled` hay không; build `live` chỉ xác nhận server đã lên, cần kiểm tra thêm `/api/health` và một lượt chat.
+
+Kiểm tra Docker với giới hạn tài nguyên trước khi deploy:
+
+```powershell
+docker build -t sk-vin:render-free .
+$env:TEST_IMAGE='sk-vin:render-free'
+$env:TEST_MEMORY='512m'
+$env:TEST_CPUS='0.1'
+$env:TEST_NODE_OPTIONS='--max-old-space-size=64'
+node scripts/check-container.mjs
+```
+
+Script kiểm tra chat, xác nhận, restart, lớp mẫu 40 học sinh và báo cáo giáo viên. Volume riêng trong kiểm tra chỉ dùng để kiểm tra logic lưu/đọc; gói Free trên Render không có volume này.
+
+### Docker local
+
 Cài/mở Docker Desktop với Linux containers và WSL 2. Trong thư mục repo:
 
 ```powershell

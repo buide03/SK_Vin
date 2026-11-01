@@ -8,7 +8,9 @@ declare global {
 }
 export async function makeDb(location?: string) {
   if (location) await mkdir(path.dirname(location), { recursive: true });
-  const db = new PGlite(location);
+  // Fresh databases briefly use two WASM instances during initdb. PGlite's
+  // default reserves 128 MiB for each; start smaller and let memory grow.
+  const db = new PGlite(location, { initialMemory: 32 * 1024 * 1024 });
   await db.waitReady;
   const exists = await db.query("SELECT to_regclass('public.records') AS name");
   if (!(exists.rows[0] as { name: string | null }).name)
