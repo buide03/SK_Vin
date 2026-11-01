@@ -3,6 +3,8 @@ export function config(env: Record<string, string | undefined> = process.env) {
   const c = z
     .object({
       APP_MODE: z.enum(["demo", "live"]).default("demo"),
+      DB_BACKEND: z.enum(["pglite", "postgres"]).default(env.DATABASE_URL ? "postgres" : "pglite"),
+      DATABASE_URL: z.string().trim().optional(),
       MODEL_MODE: z.enum(["mock", "live"]).default("mock"),
       SMALL_CELL_THRESHOLD: z.coerce.number().int().min(10).default(10),
       FOLLOW_UP_DAYS: z.coerce.number().int().min(1).max(90).default(7),
@@ -27,6 +29,13 @@ export function config(env: Record<string, string | undefined> = process.env) {
         .default(90000),
     })
     .parse(env);
+  if (c.DB_BACKEND === "postgres") {
+    try {
+      const url = new URL(c.DATABASE_URL ?? "");
+      if (!["postgres:", "postgresql:"].includes(url.protocol) || !url.hostname || !url.username || !url.password || url.pathname.length < 2)
+        throw new Error();
+    } catch { throw new Error("Thiếu hoặc sai DATABASE_URL cho PostgreSQL."); }
+  }
   if (c.APP_MODE !== "demo")
     throw new Error(
       "PILOT_BLOCKED: chỉ chạy demo; dùng học sinh thật cần duyệt nội dung, chính sách, hỗ trợ và xác thực thật.",

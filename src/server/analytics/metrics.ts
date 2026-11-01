@@ -1,6 +1,6 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { Database } from "../sql";
 export async function metrics(
-  db: PGlite,
+  db: Database,
   org: string,
   start: string,
   end: string,

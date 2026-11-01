@@ -12,7 +12,7 @@ if [ "$(id -u)" = "0" ]; then
 fi
 # Existing clusters are never overwritten. Only a fresh data directory gets
 # the empty cluster made with the identical PGlite build in this image.
-if [ ! -e /var/data/pg ]; then
+if [ "${DB_BACKEND:-}" != "postgres" ] && [ -z "${DATABASE_URL:-}" ] && [ ! -e /var/data/pg ]; then
   cp -R /app/db-template /var/data/pg
 fi
 exec "$@"

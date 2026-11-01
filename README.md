@@ -1,6 +1,8 @@
 # Agent tư vấn — SK_Vin
 
-Đóng gói Docker và triển khai Render: xem [hướng dẫn từng bước](docs/DEPLOY_RENDER.md). Bản cloud dùng mock mặc định, mật khẩu truy cập và persistent disk; chỉ dùng dữ liệu giả.
+Đóng gói Docker và triển khai Render: xem [hướng dẫn từng bước](docs/DEPLOY_RENDER.md). Có bản Docker/PGlite với persistent disk và bản Free dùng PostgreSQL riêng; mặc định mock, có mật khẩu truy cập, chỉ dùng dữ liệu giả.
+
+Demo Render Free hiện dùng PostgreSQL Free tách khỏi web để tránh giới hạn RAM của DB nhúng. Đặt `DATABASE_URL` nội bộ trong Render Environment; không cần disk cho backend này. DB Free hết hạn sau 30 ngày. Không có URL thì app dùng PGlite local như trước.
 
 Ứng dụng tiếng Việt chạy local với một agent điều phối, đang chạy mock, sẵn adapter OpenAI API và Ollama. Xem [giao diện/lớp 40 và OpenAI](docs/OPENAI_AND_CLASSROOM.md), [kho kiến thức](docs/KNOWLEDGE_BASE.md). Chỉ nhập dữ liệu giả. Giai đoạn 0–6 có các lát cắt demo và kiểm tra tự động; các phần còn thiếu so với nghiệm thu đầy đủ được ghi rõ trong docs/REVIEW_REQUIRED.md và docs/ARCHITECTURE.md. LLM thật local đã được nối; triển khai với dữ liệu/tài khoản thật và pilot vẫn bị chặn.
 

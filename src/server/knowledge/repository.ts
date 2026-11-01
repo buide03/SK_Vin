@@ -1,4 +1,4 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { Database } from "../sql";
 import {
   referenceSources,
   knowledgeEntries,
@@ -8,8 +8,8 @@ import {
 } from "../../content/knowledge";
 import type { Identity } from "../service";
 import { config } from "../config";
-const initialized = new WeakMap<PGlite, Map<string, Promise<void>>>();
-export function ensureKnowledge(db: PGlite, org: string) {
+const initialized = new WeakMap<Database, Map<string, Promise<void>>>();
+export function ensureKnowledge(db: Database, org: string) {
   let organizations = initialized.get(db);
   if (!organizations) {
     organizations = new Map();
@@ -82,7 +82,7 @@ export function selectKnowledge(
     .map((x) => x.entry);
 }
 export async function retrieveKnowledge(
-  db: PGlite,
+  db: Database,
   who: Identity,
   query: string,
   confirmedGroups: string[] = [],

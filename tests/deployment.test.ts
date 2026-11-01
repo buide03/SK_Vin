@@ -7,6 +7,15 @@ import { PGlite } from "@electric-sql/pglite";
 import { mkdtemp, cp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { makeDb } from "../src/server/db";
+import { config } from "../src/server/config";
+
+test("managed database URL selects Postgres and malformed configuration fails closed", () => {
+  assert.equal(config({}).DB_BACKEND, "pglite");
+  assert.equal(config({ DATABASE_URL: "postgresql://demo:test@localhost/demo" }).DB_BACKEND, "postgres");
+  assert.equal(config({ DB_BACKEND: "pglite", DATABASE_URL: "unused" }).DB_BACKEND, "pglite");
+  for (const url of [undefined, "", "https://example.com/db", "postgres://localhost/db", "postgres://demo:test@localhost/"])
+    assert.throws(() => config({ DB_BACKEND: "postgres", DATABASE_URL: url }));
+});
 
 test("empty build-time cluster resumes at a new location and applies runtime migrations", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "sk-vin-cluster-"));

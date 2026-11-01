@@ -1,11 +1,11 @@
 import { assignedStudents } from "./classroom";
-import type { PGlite } from "@electric-sql/pglite";
+import type { Database } from "./sql";
 import { randomUUID, createHash } from "node:crypto";
 import { z } from "zod";
 import { DomainError, type Identity } from "./service";
 import { groupIds } from "../content/catalog";
 export async function professionalWrite(
-  db: PGlite,
+  db: Database,
   who: Identity,
   input: unknown,
 ) {

@@ -1,6 +1,6 @@
 import { randomUUID, createHash } from "node:crypto";
 import { z } from "zod";
-import type { PGlite } from "@electric-sql/pglite";
+import type { Database } from "./sql";
 import { groups, groupIds } from "../content/catalog";
 import {
   observationSchema,
@@ -79,7 +79,7 @@ function requireThat(
 }
 export class Service {
   constructor(
-    public db: PGlite,
+    public db: Database,
     public model: ModelAdapter = createModel(),
   ) {}
   async profile(who: Identity, target = who.id) {

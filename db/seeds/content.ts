@@ -1,7 +1,7 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { Database } from "../../src/server/sql";
 import { groups, sources } from "../../src/content/catalog";
 import { demoIdentities } from "../../src/server/service";
-export async function seedContent(db: PGlite) {
+export async function seedContent(db: Database) {
   await db.transaction(async (tx) => {
     const put = async (id: string, kind: string, data: unknown) =>
       tx.query(

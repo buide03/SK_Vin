@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { PGlite } from "@electric-sql/pglite";
+import type { Database } from "./sql";
 import type { Identity } from "./service";
 import { DomainError } from "./errors";
 import { observationWindow } from "./assessment/window";
@@ -26,7 +26,7 @@ function scope(who: Identity) {
   )
     throw new DomainError("Không có quyền xem lớp", 403);
 }
-export async function classroomSummary(db: PGlite, who: Identity) {
+export async function classroomSummary(db: Database, who: Identity) {
   scope(who);
   const ids = classRoster.map((x) => x.id);
   const rows = (
@@ -64,7 +64,7 @@ export async function classroomSummary(db: PGlite, who: Identity) {
     privacy: "Ô nhỏ được ẩn. Giáo viên chỉ xem số liệu tổng hợp.",
   };
 }
-export async function seedClassroom(db: PGlite, who: Identity) {
+export async function seedClassroom(db: Database, who: Identity) {
   scope(who);
   if (who.role !== "admin")
     throw new DomainError("Chỉ quản trị được nạp dữ liệu giả", 403);

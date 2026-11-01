@@ -60,15 +60,19 @@ Lưu ý: Blueprint đang quản lý `MODEL_MODE=mock` và `ALLOW_EXTERNAL_MODEL=
 
 ### Demo trên gói Free
 
-Service `SK_Vin` đang tạo thủ công trên Render có thể giữ gói Free để thử với dữ liệu giả. Không áp dụng Blueprint trả phí ở mục 2 nếu bạn muốn giữ Free. Không gắn persistent disk ở chế độ này; mọi dữ liệu và phiên demo có thể mất khi Render dừng, khởi động lại hoặc deploy service. Để dùng lại lớp mẫu, vào Quản trị → Nạp lớp mẫu. Chưa được dùng cho hồ sơ thật hoặc cam kết lưu trữ.
+Service `SK_Vin` tạo thủ công giữ gói Free. Để tránh nạp PostgreSQL WebAssembly trong process web 512 MiB, bản demo cloud dùng **Render Postgres Free** tên `sk-vin-demo-db`, cùng workspace và vùng Singapore. Không áp dụng Blueprint trả phí ở mục 2 nếu muốn giữ Free.
 
-Giữ `MODEL_MODE=mock`, `MAX_MODEL_CONCURRENCY=1`, và đặt `NODE_OPTIONS=--max-old-space-size=64` trong Render Environment. Docker tạo cluster Postgres rỗng ở build time và chỉ sao chép nó khi chưa có data directory. Template không chứa bảng ứng dụng, phiên, hồ sơ hoặc khóa API; cluster đang có không bị ghi đè. Cách này tránh chạy initdb với hai vùng WebAssembly trong RAM lúc khởi động. PGlite giữ mức khởi tạo mặc định 128 MiB vì bản WASM Linux yêu cầu tối thiểu mức đó. Node trong image tắt Wasm tier-up để giảm phần biên dịch tối ưu ở nền. Heap 64 MiB không phải giới hạn tổng RAM của process.
+Trong Render, sao chép **Connect → Internal Database URL** của DB trực tiếp sang `SK_Vin → Environment → DATABASE_URL`. Không dán URL chứa mật khẩu vào chat, Git hoặc ảnh chụp. Có `DATABASE_URL` hợp lệ thì app chọn driver `pg`; không có thì dùng PGlite local. Có thể chỉ định `DB_BACKEND=postgres` để yêu cầu DB ngoài, hoặc `DB_BACKEND=pglite` để chạy local. URL lỗi bị chặn, không âm thầm đổi backend.
 
-Lần truy cập đầu có thể chậm do service ngủ và DB mới cần khởi tạo. Chưa cam kết phục vụ 40 học sinh chat đồng thời trên Free. Khi gặp lỗi 502/restart, kiểm tra Render Events có `oomKilled` hay không; build `live` chỉ xác nhận server đã lên, cần kiểm tra thêm `/api/health` và một lượt chat.
+Giữ `MODEL_MODE=mock`, `MAX_MODEL_CONCURRENCY=1`, `NODE_OPTIONS=--max-old-space-size=64`. Không cần persistent disk cho backend PostgreSQL. App dùng pool một kết nối và khóa transaction để bảo toàn thao tác ghi khi deploy chồng lấp. Chỉ dữ liệu giả được phép dùng; thông tin xác nhận nằm trong DB, ngữ cảnh chat ngắn vẫn ở RAM.
 
-DB demo dùng `shared_buffers=8MB`, `work_mem=1MB`, `maintenance_work_mem=16MB`, `wal_buffers=1MB` thay cache PostgreSQL mặc định lớn. Các ngưỡng này có thể làm truy vấn chậm hơn trên tập dữ liệu lớn; không phải cấu hình tải thật.
+**Giới hạn:** DB Free hết hạn sau **30 ngày**, chưa có backup/restore được kiểm chứng. Dữ liệu DB vẫn còn khi web restart nhưng không có cam kết giữ lâu dài. Web có thể ngủ khi không dùng; lần truy cập đầu chậm. Chưa kiểm thử 40 học sinh chat đồng thời. Xem [giới hạn Free chính thức](https://render.com/docs/free).
 
-Kiểm tra Docker với giới hạn tài nguyên trước khi deploy:
+Sau deploy, kiểm tra `/api/health` trả `{"ok":true}`, đăng nhập bằng `demo`, chọn học sinh giả và thử chat → xác nhận. Khi DB hết hạn hoặc URL sai, app trả lỗi thay vì tạo hồ sơ giả thành công. Nếu logs có `PG_INITIALIZATION_FAILED`, chỉ chia sẻ mã lỗi, không chia sẻ URL kết nối. Migrations tự chạy trong transaction lúc kết nối đầu; backend server là vai trò tin cậy, còn đọc hồ sơ học sinh dùng `app_reader` và RLS theo tổ chức/học sinh.
+
+PGlite local vẫn có tối ưu cache và DB rỗng tạo sẵn trong Docker. Các tối ưu này **không được coi là đủ cho Render Free**; DB WASM vẫn có thể vượt bộ nhớ trên nền tảng này. Bản Docker local giữ volume riêng, khác backend PostgreSQL cloud.
+
+Kiểm thử image PGlite có thể chỉ định giới hạn tài nguyên:
 
 ```powershell
 docker build -t sk-vin:render-free .
@@ -79,7 +83,7 @@ $env:TEST_NODE_OPTIONS='--max-old-space-size=64'
 node scripts/check-container.mjs
 ```
 
-Script kiểm tra chat, xác nhận, restart, lớp mẫu 40 học sinh và báo cáo giáo viên. Volume riêng trong kiểm tra chỉ dùng để kiểm tra logic lưu/đọc; gói Free trên Render không có volume này.
+Script kiểm tra chat, xác nhận, restart, lớp mẫu 40 học sinh và báo cáo giáo viên. Đây là kiểm thử local; không thay cho xác minh DB cloud. Bộ test unit/integration giới hạn hai tiến trình song song để tránh nhiều WASM compiler chiếm hết RAM máy phát triển.
 
 ### Docker local
 
