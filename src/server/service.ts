@@ -15,7 +15,7 @@ import { observationWindow } from "./assessment/window";
 import { createModel } from "./model/factory";
 import { classRoster, assignedStudents } from "./classroom";
 import { modelQueue } from "./model/queue";
-import { ModelConnectionError } from "./model/openai";
+import { ModelConnectionError, openAIPromptVersion } from "./model/openai";
 import { retrieveKnowledge } from "./knowledge/repository";
 import {
   recentMessages,
@@ -424,7 +424,7 @@ export class Service {
                   prompt_version:
                     config().MODEL_MODE === "live"
                       ? config().MODEL_PROVIDER === "openai"
-                        ? "openai-1"
+                        ? openAIPromptVersion
                         : "local-llm-1"
                       : "mock-1",
                   rule_version: "1",

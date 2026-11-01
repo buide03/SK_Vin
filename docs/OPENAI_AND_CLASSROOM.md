@@ -42,3 +42,8 @@ Tài liệu OpenAI chính thức đã đối chiếu: [Structured Outputs](https
 
 
 Xác minh OpenAI thật ngày 2026-11-01: direct adapter trả openai_llm_ok; API ứng dụng trả app_openai_journey_ok với model gpt-6-luna, hồ sơ giả HS39, source_ids SRC-DOCX-1 và REF-FANG-2025. Đã kiểm tra chat, không tự lưu quan sát, xác nhận, kế hoạch và check-in (khoảng 6 giây cho lượt thử đã làm nóng). Đây là kiểm tra kết nối/luồng, không phải kiểm định chất lượng lâm sàng. Ngữ cảnh gần đây tối đa sáu tin nhắn/phiên, lưu RAM tối đa 30 phút từ hoạt động cuối, tự xóa theo timer, xóa ngay khi đóng/rút/xóa; không ghi lịch sử thô vào DB. Khóa đã được người dùng gửi qua chat nên cần thay khóa sau đợt thử.
+## Câu hỏi tiếp nối về nhóm
+
+Agent gửi tối đa sáu tin nhắn gần đây thành các lượt user/assistant riêng, trước tin nhắn hiện tại. Ngữ cảnh này chỉ ở RAM, hết hạn sau 30 phút, mất khi server restart và được xóa khi kết thúc/rút đồng thuận/xóa hồ sơ. Không lưu conversation ở OpenAI (`store:false`), không dùng `previous_response_id`.
+
+Prompt `openai-2` yêu cầu đối chiếu cả lời kể trước khi em hỏi “thuộc nhóm nào”, nêu mã/tên nhóm có thể liên quan và căn cứ, không đánh đồng phân nhóm khung quan sát với chẩn đoán bệnh. Thiếu lịch sử hoặc chưa đủ bằng chứng vẫn phải hỏi làm rõ, không bịa lại. Nhận xét của AI trước đó không được coi là bằng chứng mới. Quan sát vẫn cần học sinh xác nhận trước khi lưu chính thức.

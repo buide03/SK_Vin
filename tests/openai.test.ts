@@ -44,6 +44,7 @@ test("OpenAI Responses request: key server-side, strict JSON, no stored response
       assert.equal(url, OPENAI_URL);
       assert.equal(options?.redirect, "error");
       const body = JSON.parse(String(options?.body));
+      assert.equal(body.input.length, 1);
       assert.equal(body.store, false);
       assert.equal(body.text.format.strict, true);
       assert.equal(body.text.format.schema.additionalProperties, false);
@@ -91,6 +92,29 @@ test("OpenAI Responses request: key server-side, strict JSON, no stored response
     process.env.OPENAI_API_KEY = "transport-test-placeholder-only";
     process.env.ALLOW_EXTERNAL_MODEL = "false";
     await assert.rejects(adapter.generate("fake", "G01"), /Chưa bật quyền/);
+  }));
+
+test("group follow-up replays bounded user and assistant turns before the new question", async () =>
+  withEnv(async () => {
+    const history = [
+      { role: "user" as const, content: "Em khó dừng chat AI lúc 22 giờ, ngủ muộn và sáng mệt; vẫn gặp bạn bình thường." },
+      { role: "assistant" as const, content: "Em muốn chọn cách nghỉ sớm hơn?" },
+    ];
+    const adapter = new OpenAIModelAdapter(async (_url, options) => {
+      const body = JSON.parse(String(options?.body));
+      assert.deepEqual(body.input.slice(0, 2), history);
+      assert.deepEqual(body.input.map((m: any) => m.role), ["user", "assistant", "user"]);
+      const current = JSON.parse(body.input[2].content);
+      assert.equal(current.user_data, "đây là tình trạng sức khỏe tinh thần thuộc nhóm nào");
+      assert.equal(current.context.recent_messages, undefined);
+      assert.deepEqual(current.context.confirmed_observations, []);
+      assert.equal(body.store, false);
+      assert.equal(body.previous_response_id, undefined);
+      assert.match(body.instructions, /mã và tên nhóm có thể liên quan/);
+      return Response.json({ status: "completed", output: [{ type: "message", content: [{ type: "output_text", text: JSON.stringify(result) }] }] });
+    });
+    await adapter.generate("đây là tình trạng sức khỏe tinh thần thuộc nhóm nào", "G01", undefined,
+      { stage: "clarify", recent_messages: history, confirmed_observations: [] });
   }));
 test("old local consent does not authorize OpenAI egress; student must reconfirm", async () =>
   withEnv(async () => {
