@@ -19,6 +19,8 @@ test("empty build-time cluster resumes at a new location and applies runtime mig
     const resumed = await makeDb(path.join(root, "runtime"));
     try {
       assert.deepEqual((await resumed.query("SELECT * FROM records")).rows, []);
+      assert.equal((await resumed.query<{ shared_buffers: string }>("SHOW shared_buffers")).rows[0].shared_buffers, "8MB");
+      assert.equal((await resumed.query<{ work_mem: string }>("SHOW work_mem")).rows[0].work_mem, "1MB");
       assert.deepEqual((await resumed.query("SELECT * FROM demo_sessions")).rows, []);
       assert.equal((await resumed.query<{ name: string }>("SELECT to_regclass('public.observations') AS name")).rows[0].name, "observations");
     } finally { await resumed.close(); }

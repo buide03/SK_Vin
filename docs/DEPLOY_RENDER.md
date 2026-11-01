@@ -66,6 +66,8 @@ Giữ `MODEL_MODE=mock`, `MAX_MODEL_CONCURRENCY=1`, và đặt `NODE_OPTIONS=--m
 
 Lần truy cập đầu có thể chậm do service ngủ và DB mới cần khởi tạo. Chưa cam kết phục vụ 40 học sinh chat đồng thời trên Free. Khi gặp lỗi 502/restart, kiểm tra Render Events có `oomKilled` hay không; build `live` chỉ xác nhận server đã lên, cần kiểm tra thêm `/api/health` và một lượt chat.
 
+DB demo dùng `shared_buffers=8MB`, `work_mem=1MB`, `maintenance_work_mem=16MB`, `wal_buffers=1MB` thay cache PostgreSQL mặc định lớn. Các ngưỡng này có thể làm truy vấn chậm hơn trên tập dữ liệu lớn; không phải cấu hình tải thật.
+
 Kiểm tra Docker với giới hạn tài nguyên trước khi deploy:
 
 ```powershell

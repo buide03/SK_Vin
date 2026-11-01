@@ -8,7 +8,17 @@ declare global {
 }
 export async function makeDb(location?: string) {
   if (location) await mkdir(path.dirname(location), { recursive: true });
-  const db = new PGlite(location);
+  // PostgreSQL defaults include 128 MiB of shared buffers. This is a small
+  // demo database, so cap its caches/workspaces separately from V8's heap.
+  const db = new PGlite(location, {
+    startParams: [
+      ...PGlite.defaultStartParams,
+      "-c", "shared_buffers=8MB",
+      "-c", "work_mem=1MB",
+      "-c", "maintenance_work_mem=16MB",
+      "-c", "wal_buffers=1MB",
+    ],
+  });
   await db.waitReady;
   const exists = await db.query("SELECT to_regclass('public.records') AS name");
   if (!(exists.rows[0] as { name: string | null }).name)
