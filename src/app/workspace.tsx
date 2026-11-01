@@ -289,8 +289,6 @@ export default function Workspace() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <span className="demo-dot" />
-          Dữ liệu giả · Bản demo
           <details>
             <summary>Quyền riêng tư</summary>
             <p>
@@ -984,7 +982,7 @@ export default function Workspace() {
           </footer>
         )}
         <footer className="app-footer">
-          Bản demo · Chỉ dữ liệu giả · Nội dung chưa được duyệt
+          Nội dung chưa được duyệt
         </footer>
       </main>
     </div>
