@@ -1,0 +1,37 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import path from "node:path";
+import { deployment, demoAccess } from "../src/server/deployment";
+import { localOrigin } from "../src/server/privacy/origin";
+
+const hosted = { RENDER: "true", RENDER_EXTERNAL_URL: "https://demo.onrender.com", DATA_DIR: "/var/data", DEMO_ACCESS_PASSWORD: "test-password-only-1234567890" };
+test("hosted demo fails closed and requires the shared credential", () => {
+  const req = (value?: string) => new Request("https://demo.onrender.com", { headers: value ? { authorization: value } : {} });
+  assert.equal(demoAccess(req(), hosted)?.status, 401);
+  for (const value of ["Bearer x", "Basic !!", `Basic ${Buffer.from("demo:wrong").toString("base64")}`])
+    assert.equal(demoAccess(req(value), hosted)?.status, 401);
+  assert.equal(demoAccess(req(`Basic ${Buffer.from(`demo:${hosted.DEMO_ACCESS_PASSWORD}`).toString("base64")}`), hosted), undefined);
+  assert.equal(demoAccess(req(), { ...hosted, DEMO_REQUIRE_ACCESS: "false", DEMO_ACCESS_PASSWORD: "" })?.status, 503);
+  assert.equal(demoAccess(req(), {}), undefined);
+});
+test("deployment validates origin, disk path and isolates browser-test storage", () => {
+  assert.equal(deployment(hosted).origin, hosted.RENDER_EXTERNAL_URL);
+  assert.equal(deployment({ ...hosted, SK_E2E: "1" }).dataDir, path.join(process.cwd(), ".data"));
+  for (const APP_ORIGIN of ["http://demo.example", "https://user:pass@demo.example", "https://demo.example/path", "https://demo.example?x=1"])
+    assert.throws(() => deployment({ ...hosted, APP_ORIGIN }));
+  assert.throws(() => deployment({ DATA_DIR: "relative" }));
+  assert.throws(() => deployment({ ...hosted, DATA_DIR: "/tmp" }));
+});
+test("deployed writes accept only configured origin, ignoring spoofed forwarding headers", () => {
+  const before = process.env.APP_ORIGIN;
+  process.env.APP_ORIGIN = "https://demo.example";
+  try {
+    const req = (origin: string) => new Request("http://localhost/api/demo", { headers: { origin, host: "localhost", "x-forwarded-host": "evil.example" } });
+    assert.equal(localOrigin(req("https://demo.example")), true);
+    for (const origin of ["https://evil.example", "http://localhost", "https://demo.example.evil", "https://demo.example/"])
+      assert.equal(localOrigin(req(origin)), false);
+  } finally {
+    if (before === undefined) delete process.env.APP_ORIGIN;
+    else process.env.APP_ORIGIN = before;
+  }
+});

@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: agent-tu-van
+    runtime: docker
+    plan: 1c-2g
+    region: singapore
+    numInstances: 1
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    disk:
+      name: agent-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: APP_MODE
+        value: demo
+      - key: MODEL_MODE
+        value: mock
+      - key: MODEL_PROVIDER
+        value: openai
+      - key: OPENAI_MODEL
+        value: gpt-6-luna
+      - key: ALLOW_EXTERNAL_MODEL
+        value: "false"
+      - key: DATA_DIR
+        value: /var/data
+      - key: DEMO_REQUIRE_ACCESS
+        value: "true"
+      - key: DEMO_ACCESS_PASSWORD
+        generateValue: true
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

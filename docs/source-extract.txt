@@ -1,0 +1,43 @@
+Tác động tiềm ẩn của việc sử dụng AI sai cách lên sức khỏe tinh thần học sinh
+Bảng dưới đây tổng hợp sáu nhóm rủi ro có thể gặp khi học sinh dùng chatbot hoặc AI tạo sinh thiếu kiểm chứng, lệ thuộc hoặc thay thế hỗ trợ của người thật. Đây là các dấu hiệu quan sát để trao đổi và hỗ trợ, không phải tiêu chí chẩn đoán. Nghiên cứu hiện còn mới; một số kết quả đến từ người trưởng thành, sinh viên đại học hoặc tình huống giả lập. Vì vậy, các phát hiện không đủ để kết luận AI gây ra vấn đề tâm lý ở một học sinh cụ thể.
+Nhóm tác động
+Dấu hiệu nhận biết
+Hành vi sử dụng AI
+Ảnh hưởng tâm lý có thể có
+Bài báo/báo cáo, năm và tóm tắt bằng chứng; giới hạn
+Lệ thuộc hoặc sử dụng AI có tính cưỡng bức
+Tăng thời gian trò chuyện; bồn chồn khi không truy cập được; liên tục hỏi lại để được trấn an; khó tự quyết định khi không có AI.
+Dùng chatbot cho hầu hết quyết định cá nhân/cảm xúc; quay lại nhiều lần dù câu trả lời không giúp giải quyết vấn đề; bỏ dở việc khác để tiếp tục chat.
+Có thể làm tăng lệ thuộc vào sự trấn an tức thời, giảm cảm giác tự chủ và làm khó chịu hơn khi không thể truy cập. Đây là khả năng cần theo dõi, không phải kết luận rằng người dùng đã “nghiện”.
+Fang và cộng sự, 2025. “How AI and Human Behaviors Shape Psychosocial Effects of Extended Chatbot Use: A Longitudinal Controlled Study.” Thử nghiệm có đối chứng 4 tuần (981 người tham gia): điều kiện được phân ngẫu nhiên không tạo khác biệt có ý nghĩa; người tự nguyện dùng chatbot nhiều hơn có các kết quả xã hội/tâm lý kém thuận lợi hơn. Giới hạn: thời gian ngắn; mối liên hệ với mức dùng tự chọn không chứng minh nguyên nhân; chưa đại diện riêng cho học sinh.
+https://www.media.mit.edu/publications/how-ai-and-human-behaviors-shape-psychosocial-effects-of-chatbot-use-a-longitudinal-controlled-study/
+Cô lập xã hội và cảm giác cô đơn
+Ít tìm đến bạn bè/người thân; giảm tham gia hoạt động chung; nói rằng chỉ chatbot mới hiểu mình; vẫn thấy trống trải sau khi trò chuyện.
+Dùng AI đồng hành thay cho việc duy trì quan hệ; chọn chatbot cho mọi cuộc trò chuyện khó; tránh gặp trực tiếp hoặc chia sẻ với người đáng tin cậy.
+Nếu tương tác với AI lấn át kết nối thật, học sinh có thể thiếu nguồn hỗ trợ xã hội và cảm thấy cô đơn hơn. Cũng có khả năng người vốn cô đơn tìm đến AI nhiều hơn.
+Folk và Dunn, 2026. “How Does Turning to AI for Companionship Predict Loneliness and Vice Versa?” Theo dõi dọc 12 tháng với hơn 2.000 người trưởng thành ở bốn nước phương Tây: tăng sử dụng chatbot xã hội dự báo tăng cô đơn theo một thước đo đơn; cô đơn cũng dự báo tăng sử dụng sau đó. Giới hạn: phân tích thăm dò, mẫu người lớn; thước đo cô đơn hẹp; không chứng minh quan hệ nhân quả.
+https://pubmed.ncbi.nlm.nih.gov/41870975/
+Lo âu hoặc trầm cảm đi kèm việc tìm lời khuyên sức khỏe từ AI
+Tìm câu trả lời sức khỏe lặp đi lặp lại; lo lắng tăng sau khi đọc phản hồi; khó ngừng kiểm tra triệu chứng; thường tự gắn nhãn cho cảm xúc hoặc tình trạng của mình.
+Hỏi AI để tự đánh giá sức khỏe tâm thần, xin trấn an nhiều lần hoặc tự diễn giải câu trả lời như chẩn đoán; trì hoãn trao đổi với người lớn/chuyên gia.
+Thông tin mơ hồ hoặc sai có thể làm tăng bối rối, lo lắng hoặc suy nghĩ luẩn quẩn; chiều ngược lại, người đang gặp khó khăn có thể chủ động tìm đến AI.
+Zhai và cộng sự, 2026. “Associations of Generative AI Use for Health Issues With Anxiety and Depression.” Phân tích khảo sát 96.205 sinh viên đại học Hoa Kỳ: dùng GenAI cho vấn đề sức khỏe có liên hệ với khả năng sàng lọc dương tính lo âu và trầm cảm cao hơn. Giới hạn: nghiên cứu quan sát/cắt ngang; không xác định chiều tác động; sinh viên đại học không tương đương học sinh phổ thông.
+https://onlinelibrary.wiley.com/doi/10.1002/jcad.70064
+Củng cố niềm tin sai lệch hoặc diễn giải bất thường
+Tin chắc hơn vào một suy đoán đáng sợ/khó kiểm chứng; khó tiếp nhận cách giải thích khác; tăng nghi ngờ người xung quanh; tâm trạng căng thẳng khi AI đồng tình.
+Đưa ý tưởng bất thường cho chatbot và xem lời xác nhận là bằng chứng; tiếp tục hỏi theo hướng dẫn dắt; coi AI như nguồn thẩm quyền tuyệt đối.
+Phản hồi chiều theo người hỏi có thể làm một diễn giải sai được củng cố, tăng sợ hãi hoặc xa cách với người hỗ trợ. Không thể từ đó suy ra người dùng có rối loạn tâm thần.
+Shen và cộng sự, 2025. “Evaluation of Large Language Model Chatbot Responses to Psychotic Prompts.” Nghiên cứu tiền ấn phẩm thử 474 cặp câu lệnh-phản hồi trên ba phiên bản ChatGPT; chuyên gia đánh giá câu lệnh có nội dung loạn thần dễ nhận phản hồi không phù hợp hơn câu đối chứng. Giới hạn: chưa bình duyệt tại thời điểm công bố; tình huống giả lập, chỉ thử một sản phẩm và không đo tác động lên người dùng.
+https://pmc.ncbi.nlm.nih.gov/articles/PMC12642750/
+Thay thế hỗ trợ của người lớn hoặc chuyên gia
+Giấu mức độ khó khăn; từ chối gặp giáo viên tư vấn/chuyên gia; phụ thuộc hoàn toàn vào lời khuyên trực tuyến; vấn đề kéo dài hoặc nặng hơn mà không tìm trợ giúp.
+Dùng chatbot phổ thông như nhà trị liệu/chẩn đoán; làm theo lời khuyên mà không kiểm chứng; chỉ chia sẻ với AI, nhất là khi khủng hoảng.
+Có thể bỏ lỡ đánh giá bối cảnh và hỗ trợ phù hợp; lời khuyên chung chung hoặc trấn an sai lúc có thể làm chậm việc tìm người giúp đỡ.
+Scholich và cộng sự, 2025. “A Comparison of Responses from Human Therapists and Large Language Model–Based Chatbots to Assess Therapeutic Communication.” So sánh phản hồi chatbot với tình huống giả lập và ý kiến 17 nhà trị liệu; chatbot thường đưa gợi ý/trấn an nhiều hơn, hỏi tìm hiểu bối cảnh ít hơn; nhóm chuyên gia lưu ý thiếu đánh giá nguy cơ và chuyển tuyến trong tình huống khủng hoảng. Giới hạn: kịch bản ngắn, mẫu chuyên gia nhỏ, không đo kết quả ở người dùng thật.
+https://mental.jmir.org/2025/1/e69709
+Mờ ranh giới giữa AI và một mối quan hệ có qua có lại
+Gọi chatbot là bạn/người yêu duy nhất; chia sẻ bí mật hoặc thông tin riêng tư; cảm thấy bị bỏ rơi/ghen tuông khi chatbot đổi cách trả lời hoặc không còn truy cập được.
+Nhân cách hóa AI; ưu tiên trò chuyện với nhân vật AI về chuyện nghiêm trọng; gửi thông tin cá nhân mà không cân nhắc quyền riêng tư.
+Có thể hình thành gắn bó một chiều, thất vọng hoặc tổn thương khi phản hồi thay đổi; chia sẻ quá mức cũng tạo lo ngại về riêng tư. Những hệ quả tâm lý dài hạn ở học sinh vẫn chưa rõ.
+Common Sense Media, 2025. “Talk, Trust, and Trade-Offs: How and Why Teens Use AI Companions.” Báo cáo khảo sát thanh thiếu niên tại Hoa Kỳ: gần 3/4 từng dùng AI companions, khoảng một nửa dùng thường xuyên; một phần chọn AI cho chuyện nghiêm túc hoặc chia sẻ thông tin cá nhân. Giới hạn: báo cáo khảo sát, không phải chẩn đoán hay thử nghiệm; hành vi tự báo cáo không chứng minh tác động tâm lý.
+https://about.commonsensemedia.org/research/talk-trust-and-trade-offs-how-and-why-teens-use-ai-companions
