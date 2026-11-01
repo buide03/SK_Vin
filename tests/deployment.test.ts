@@ -8,6 +8,22 @@ import { mkdtemp, cp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { makeDb } from "../src/server/db";
 import { config } from "../src/server/config";
+import { GET as health } from "../src/app/api/health/route";
+
+test("health identifies missing database configuration without exposing credentials", async () => {
+  const before = { DB_BACKEND: process.env.DB_BACKEND, DATABASE_URL: process.env.DATABASE_URL };
+  try {
+    process.env.DB_BACKEND = "postgres";
+    process.env.DATABASE_URL = "https://hidden-password@example.com";
+    const response = await health();
+    assert.equal(response.status, 503);
+    assert.deepEqual(await response.json(), { ok: false, code: "DATABASE_URL_INVALID" });
+  } finally {
+    for (const [key, value] of Object.entries(before)) {
+      if (value === undefined) delete process.env[key]; else process.env[key] = value;
+    }
+  }
+});
 
 test("managed database URL selects Postgres and malformed configuration fails closed", () => {
   assert.equal(config({}).DB_BACKEND, "pglite");
