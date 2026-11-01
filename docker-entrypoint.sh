@@ -8,6 +8,11 @@ fi
 if [ "$(id -u)" = "0" ]; then
   mkdir -p /var/data
   chown node:node /var/data
-  exec gosu node "$@"
+  exec gosu node "$0" "$@"
+fi
+# Existing clusters are never overwritten. Only a fresh data directory gets
+# the empty cluster made with the identical PGlite build in this image.
+if [ ! -e /var/data/pg ]; then
+  cp -R /app/db-template /var/data/pg
 fi
 exec "$@"

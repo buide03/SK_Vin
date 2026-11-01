@@ -62,7 +62,7 @@ Lưu ý: Blueprint đang quản lý `MODEL_MODE=mock` và `ALLOW_EXTERNAL_MODEL=
 
 Service `SK_Vin` đang tạo thủ công trên Render có thể giữ gói Free để thử với dữ liệu giả. Không áp dụng Blueprint trả phí ở mục 2 nếu bạn muốn giữ Free. Không gắn persistent disk ở chế độ này; mọi dữ liệu và phiên demo có thể mất khi Render dừng, khởi động lại hoặc deploy service. Để dùng lại lớp mẫu, vào Quản trị → Nạp lớp mẫu. Chưa được dùng cho hồ sơ thật hoặc cam kết lưu trữ.
 
-Giữ `MODEL_MODE=mock`, `MAX_MODEL_CONCURRENCY=1`, và đặt `NODE_OPTIONS=--max-old-space-size=64` trong Render Environment. App khởi tạo PGlite với 32 MiB thay mức mặc định 128 MiB; PGlite vẫn tự tăng bộ nhớ khi cần. Đây không phải giới hạn tổng RAM của process. Đừng tự nâng giới hạn heap trên instance 512 MiB mà chưa đo lại bộ nhớ.
+Giữ `MODEL_MODE=mock`, `MAX_MODEL_CONCURRENCY=1`, và đặt `NODE_OPTIONS=--max-old-space-size=64` trong Render Environment. Docker tạo cluster Postgres rỗng ở build time và chỉ sao chép nó khi chưa có data directory. Template không chứa bảng ứng dụng, phiên, hồ sơ hoặc khóa API; cluster đang có không bị ghi đè. Cách này tránh chạy initdb với hai vùng WebAssembly trong RAM lúc khởi động. PGlite giữ mức khởi tạo mặc định 128 MiB vì bản WASM Linux yêu cầu tối thiểu mức đó. Node trong image tắt Wasm tier-up để giảm phần biên dịch tối ưu ở nền. Heap 64 MiB không phải giới hạn tổng RAM của process.
 
 Lần truy cập đầu có thể chậm do service ngủ và DB mới cần khởi tạo. Chưa cam kết phục vụ 40 học sinh chat đồng thời trên Free. Khi gặp lỗi 502/restart, kiểm tra Render Events có `oomKilled` hay không; build `live` chỉ xác nhận server đã lên, cần kiểm tra thêm `/api/health` và một lượt chat.
 
