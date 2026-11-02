@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { groups } from "../content/catalog";
+import { groups, groupLabel } from "../content/catalog";
 export default function KnowledgeLibrary() {
   const [data, setData] = useState<any>(null),
     [query, setQuery] = useState(""),
@@ -91,7 +91,7 @@ export default function KnowledgeLibrary() {
                   <p>Câu hỏi nháp: {e.clarifying_question}</p>
                   {e.differentiate.map((d: any) => (
                     <p key={d.group_id}>
-                      {d.group_id}: {d.distinction}
+                      {groupLabel(d.group_id)}: {d.distinction}
                     </p>
                   ))}
                   <p>{e.limitations}</p>

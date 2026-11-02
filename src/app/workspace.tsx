@@ -1,7 +1,7 @@
 "use client";
 import KnowledgeLibrary from "./knowledge-library";
 import { useEffect, useRef, useState } from "react";
-import { groups } from "../content/catalog";
+import { groups, groupLabel } from "../content/catalog";
 import {
   Proposal,
   Plan,
@@ -14,14 +14,6 @@ type Row = {
   version: number;
   data: Record<string, any>;
 };
-const subjects = [
-  "Thói quen dùng AI",
-  "Kết nối xã hội",
-  "Tìm lời khuyên sức khỏe",
-  "Kiểm chứng niềm tin",
-  "Tìm người hỗ trợ",
-  "Ranh giới với AI",
-];
 const statuses: Record<string, string> = {
   reported_present: "Có trải nghiệm",
   reported_absent: "Không có",
@@ -558,11 +550,7 @@ export default function Workspace() {
                   {r.data.frequency && <p>Tần suất: {r.data.frequency}</p>}
                   {r.data.reported_impact && <p>Ảnh hưởng em xác nhận: {r.data.reported_impact}</p>}
                   <small>
-                    {
-                      subjects[
-                        groups.findIndex((g) => g.id === r.data.group_id)
-                      ]
-                    }{" "}
+                    {groupLabel(r.data.group_id)}{" "}
                     · {r.data.period_end}
                   </small>
                 </article>
@@ -811,12 +799,12 @@ export default function Workspace() {
               </div>
             ) : report?.rows ? (
               <div className="group-bars">
-                {groups.map((g, i) => {
+                {groups.map((g) => {
                   const r = report.rows.find((x: any) => x.g === g.id);
                   return (
                     <div key={g.id} className="group-bar" title={g.name}>
                       <div>
-                        <strong>{subjects[i]}</strong>
+                        <strong>{groupLabel(g.id)}</strong>
                         <span>
                           {r
                             ? `${r.numerator}/${r.denominator}`
@@ -854,7 +842,7 @@ export default function Workspace() {
                     <tbody>
                       {report.rows.map((r: any) => (
                         <tr key={r.g}>
-                          <td>{groups.find((g) => g.id === r.g)?.name}</td>
+                          <td>{groupLabel(r.g)}</td>
                           <td>{r.numerator}</td>
                           <td>{r.denominator}</td>
                           <td>{r.incomplete}</td>
@@ -940,7 +928,7 @@ export default function Workspace() {
                 .filter((x) => x.kind === "content_draft")
                 .map((x) => (
                   <p key={x.id}>
-                    {x.data.group}: {x.data.text}
+                    {groupLabel(x.data.group)}: {x.data.text}
                   </p>
                 ))}
             </section>

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { groups, sources } from "../content/catalog";
+import { groups, groupLabel, sources } from "../content/catalog";
 type Row = {
   id: string;
   kind: string;
@@ -22,7 +22,7 @@ export function Proposal({
     [impact, setImpact] = useState(String(row.data.reported_impact ?? ""));
   return (
     <article>
-      <h3>{row.data.group_id} · {groups.find((g) => g.id === row.data.group_id)?.name} · Chờ xác nhận</h3>
+      <h3>{groupLabel(row.data.group_id)} · Chờ xác nhận</h3>
       <label>
         Em sửa bản tóm tắt
         <textarea
@@ -139,9 +139,9 @@ export function Plan({
           value={selected || available[0]}
           onChange={(e) => setSelected(e.target.value)}
         >
-          {available.map((g, i) => (
+          {available.map((g) => (
             <option key={g} value={g}>
-              {g} · {groups.find((item) => item.id === g)?.name}
+              {groupLabel(g)}
             </option>
           ))}
         </select>
@@ -208,7 +208,7 @@ export function ProfessionalForm({
           Nhóm
           <select name="group">
             {groups.map((g) => (
-              <option key={g.id}>{g.id}</option>
+              <option key={g.id} value={g.id}>{groupLabel(g.id)}</option>
             ))}
           </select>
         </label>

@@ -67,6 +67,10 @@ export const groups = [
   })),
   actions: [a, b],
 }));
+export function groupLabel(id: string) {
+  const group = groups.find((g) => g.id === id);
+  return group ? `${group.id} · ${group.name}` : id;
+}
 export const sources = [
   {
     id: "SRC-DOCX-1",
