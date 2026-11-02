@@ -28,6 +28,7 @@ export const outputSchema = z
   .strict();
 export type ModelOutput = z.infer<typeof outputSchema>;
 export type ModelContext = {
+  follow_up_days?: number;
   recent_messages?: { role: "user" | "assistant"; content: string }[];
   knowledge?: unknown;
   stage: string;

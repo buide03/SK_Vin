@@ -8,6 +8,7 @@ import {
 } from "../../content/knowledge";
 import type { Identity } from "../service";
 import { config } from "../config";
+import { groupExamples } from "../../content/group-examples";
 const initialized = new WeakMap<Database, Map<string, Promise<void>>>();
 export function ensureKnowledge(db: Database, org: string) {
   let organizations = initialized.get(db);
@@ -78,7 +79,7 @@ export function selectKnowledge(
     .sort(
       (a, b) => b.matches - a.matches || a.entry.id.localeCompare(b.entry.id),
     )
-    .slice(0, 3)
+    .slice(0, 6)
     .map((x) => x.entry);
 }
 export async function retrieveKnowledge(
@@ -112,6 +113,7 @@ export async function retrieveKnowledge(
     entries,
     sources: referenceSources.filter((s) => sourceIds.has(s.id)),
     comparison_matrix: knowledgeMatrix,
+    comparison_examples: { status: "draft", type: "hypothetical_examples", examples: groupExamples },
     limits:
       "Khung quan sát có thể chồng lấp, không là thang chẩn đoán; chưa đủ dữ liệu phải hỏi thêm. Từ khóa chỉ truy xuất tài liệu, không xác nhận dấu hiệu. Câu hỏi/hành động là bản nháp biên soạn, chưa được chuyên gia duyệt.",
   };

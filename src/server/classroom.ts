@@ -3,6 +3,7 @@ import type { Database } from "./sql";
 import type { Identity } from "./service";
 import { DomainError } from "./errors";
 import { observationWindow } from "./assessment/window";
+import { groups } from "../content/catalog";
 export const classroom = {
   id: "demo-class-40",
   name: "Lớp mẫu",
@@ -47,10 +48,28 @@ export async function classroomSummary(db: Database, who: Identity) {
     ).size;
   const hide = (n: number) =>
     (n > 0 && n < 10) || (40 - n > 0 && 40 - n < 10) ? null : n;
+  const studentGroups = who.role === "teacher" ? classRoster.map((student) => {
+    const allowed = rows.some((r) => r.student_id === student.id && r.kind === "consent" && r.data.active && r.data.teacher_groups_allowed);
+    const latest = new Map<string, Record<string, any>>();
+    if (allowed) for (const row of rows.filter((r) => r.student_id === student.id && r.kind === "observation" && r.data.current && r.data.student_confirmed_at)
+      .sort((a, b) => String(b.data.student_confirmed_at).localeCompare(String(a.data.student_confirmed_at)))) {
+      if (!latest.has(row.data.group_id)) latest.set(row.data.group_id, row.data);
+    }
+    return {
+      code: student.code,
+      reviewed: latest.size > 0,
+      groups: groups.filter((g) => latest.get(g.id)?.status === "reported_present").map((g) => ({
+        id: g.id, name: g.name,
+        confirmed_at: latest.get(g.id)!.student_confirmed_at,
+        period_end: latest.get(g.id)!.period_end,
+      })),
+    };
+  }) : undefined;
   return {
     ...classroom,
     demo: true,
     roster: classRoster,
+    ...(studentGroups ? { student_groups: studentGroups } : {}),
     assigned: assignedStudents(who),
     counts: {
       consented: hide(unique("consent", (d) => d.active)),
@@ -61,7 +80,7 @@ export async function classroomSummary(db: Database, who: Identity) {
       responded: hide(unique("checkin")),
     },
     period: observationWindow(),
-    privacy: "Ô nhỏ được ẩn. Giáo viên chỉ xem số liệu tổng hợp.",
+    privacy: "Ô nhỏ trong thống kê được ẩn. Giáo viên xem nhóm của từng mã HS sau khi em đồng ý chia sẻ và xác nhận; không xem hội thoại hoặc nhận xét nháp.",
   };
 }
 export async function seedClassroom(db: Database, who: Identity) {
@@ -103,8 +122,9 @@ export async function seedClassroom(db: Database, who: Identity) {
         );
       await put("consent", "consent", {
         active: true,
-        notice_version: "demo-1",
+        notice_version: "demo-groups-2",
         external_model_allowed: false,
+        teacher_groups_allowed: true,
         demo: true,
       });
       for (const group of ["G01", "G02"])

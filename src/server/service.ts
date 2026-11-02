@@ -204,6 +204,7 @@ export class Service {
               () =>
                 this.model.generate(p.text, p.group, controller.signal, {
                   knowledge: retrieved,
+                  follow_up_days: config().FOLLOW_UP_DAYS,
                   recent_messages: recentMessages(who, p.session_id),
                   stage: session.data.state,
                   confirmed_observations: records
@@ -298,8 +299,9 @@ export class Service {
           notice_version:
             config().MODEL_PROVIDER === "openai" &&
             config().MODEL_MODE === "live"
-              ? "demo-openai-1"
-              : "demo-1",
+              ? "demo-openai-groups-2"
+              : "demo-groups-2",
+          teacher_groups_allowed: true,
           external_model_allowed:
             config().MODEL_PROVIDER === "openai" &&
             config().MODEL_MODE === "live",

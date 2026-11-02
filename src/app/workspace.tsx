@@ -59,6 +59,7 @@ export default function Workspace() {
       (x) =>
         x.kind === "consent" &&
         x.data.active &&
+        x.data.teacher_groups_allowed &&
         (!external || x.data.external_model_allowed),
     ),
     version = rows.find((x) => x.kind === "revision")?.version ?? 0,
@@ -295,6 +296,7 @@ export default function Workspace() {
               AI không chẩn đoán. Chỉ thông tin em xác nhận được lưu vào hồ sơ.
               Người tư vấn được phân công có thể xem. Em được bỏ qua hoặc xóa dữ
               liệu.
+              Giáo viên xem mã HS và các nhóm em đã xác nhận sau khi em đồng ý chia sẻ.
             </p>
           </details>
         </div>
@@ -386,6 +388,7 @@ export default function Workspace() {
             <span className="section-icon">✓</span>
             <h2>Trước khi bắt đầu</h2>
             <p>Chỉ dùng dữ liệu giả. Em xem và xác nhận trước khi lưu.</p>
+            <p>Giáo viên sẽ xem mã HS và tên các nhóm em xác nhận có trải nghiệm. Em có thể bỏ qua hoặc rút đồng thuận và xóa dữ liệu.</p>
             {external && (
               <p className="notice">
                 Tin nhắn, phần hội thoại gần đây và tóm tắt cần thiết sẽ được gửi tới OpenAI để tạo câu
@@ -397,7 +400,7 @@ export default function Workspace() {
               <p>
                 AI không thay thế người hỗ trợ và không chẩn đoán. Nội dung chat
                 chỉ giữ trong phiên; thông tin xác nhận lưu trên máy chủ. Người
-                tư vấn được phân công có thể xem hồ sơ. Em có thể sửa, bỏ qua,
+                tư vấn được phân công có thể xem hồ sơ; giáo viên xem tên nhóm đã xác nhận của mã HS. Em có thể sửa, bỏ qua,
                 rút đồng thuận và xóa. Chưa cấu hình đầu mối hỗ trợ thật; ứng
                 dụng không tự liên hệ ai.
               </p>
@@ -552,6 +555,8 @@ export default function Workspace() {
                 <article className="record" key={r.id}>
                   <span className="pill">{statuses[r.data.status]}</span>
                   <p>{r.data.summary}</p>
+                  {r.data.frequency && <p>Tần suất: {r.data.frequency}</p>}
+                  {r.data.reported_impact && <p>Ảnh hưởng em xác nhận: {r.data.reported_impact}</p>}
                   <small>
                     {
                       subjects[
@@ -683,14 +688,40 @@ export default function Workspace() {
                     </button>
                   )}
                 </div>
-                <div className="roster-grid">
+                {role === "teacher" && classData.student_groups && (
+                  <section className="confirmed-groups-panel">
+                    <div className="section-heading">
+                      <h3>Nhóm học sinh đã xác nhận</h3>
+                      <button className="text-button" disabled={busy} onClick={() => {
+                        setBusy(true); setError("");
+                        void load().catch((e) => setError(e instanceof Error ? e.message : "Chưa cập nhật được lớp.")).finally(() => setBusy(false));
+                      }}>Cập nhật nhóm</button>
+                    </div>
+                    <p className="muted">Chỉ hiển thị sau khi học sinh đồng ý chia sẻ và xác nhận có trải nghiệm. Đây là nhóm quan sát, không phải chẩn đoán.</p>
+                    <div className="student-group-scroll"><table className="student-group-table">
+                      <thead><tr><th>Mã HS</th><th>Nhóm đã xác nhận</th></tr></thead>
+                      <tbody>{classData.student_groups.map((s: any) => (
+                        <tr key={s.code} data-student-code={s.code}>
+                          <th scope="row">{s.code}</th>
+                          <td>{s.groups.length ? s.groups.map((g: any) => (
+                            <div key={g.id} className="confirmed-group-item">
+                              <strong>{g.id} · {g.name}</strong>
+                              <small>Xác nhận {new Date(g.confirmed_at).toLocaleDateString("vi-VN")}</small>
+                            </div>
+                          )) : <span className="muted">{s.reviewed ? "Đã xác nhận; chưa ghi nhận nhóm có trải nghiệm" : "Chưa có nhóm được chia sẻ và xác nhận"}</span>}</td>
+                        </tr>
+                      ))}</tbody>
+                    </table></div>
+                  </section>
+                )}
+                {role !== "teacher" && <div className="roster-grid">
                   {classData.roster.map((s: any) => (
                     <div className="student-tile" key={s.id}>
                       <span>{s.code.slice(2)}</span>
                       <strong>{s.code}</strong>
                     </div>
                   ))}
-                </div>
+                </div>}
               </section>
               <section className="panel quick-panel">
                 <h2>Công việc của lớp</h2>
@@ -724,8 +755,7 @@ export default function Workspace() {
                   </button>
                 )}
                 <small className="privacy-note">
-                  Giáo viên không được xem nội dung trò chuyện hoặc hồ sơ cá
-                  nhân.
+                  Giáo viên xem nhóm đã được đồng ý chia sẻ và xác nhận; không xem nội dung trò chuyện hoặc ghi chú tư vấn.
                 </small>
                 {role === "counselor" && (
                   <button

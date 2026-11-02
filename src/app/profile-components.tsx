@@ -17,10 +17,12 @@ export function Proposal({
   confirm: (p: unknown) => Promise<boolean>;
 }) {
   const [summary, setSummary] = useState(row.data.summary),
-    [status, setStatus] = useState(row.data.status);
+    [status, setStatus] = useState(row.data.status),
+    [frequency, setFrequency] = useState(String(row.data.frequency ?? "")),
+    [impact, setImpact] = useState(String(row.data.reported_impact ?? ""));
   return (
     <article>
-      <h3>{row.data.group_id} · Chờ xác nhận</h3>
+      <h3>{row.data.group_id} · {groups.find((g) => g.id === row.data.group_id)?.name} · Chờ xác nhận</h3>
       <label>
         Em sửa bản tóm tắt
         <textarea
@@ -28,6 +30,14 @@ export function Proposal({
           onChange={(e) => setSummary(e.target.value)}
           maxLength={600}
         />
+      </label>
+      <label>
+        Tần suất em tự mô tả
+        <input value={frequency} onChange={(e) => setFrequency(e.target.value)} maxLength={100} placeholder="Chưa có thông tin" />
+      </label>
+      <label>
+        Ảnh hưởng em tự mô tả
+        <textarea value={impact} onChange={(e) => setImpact(e.target.value)} maxLength={300} placeholder="Chưa có thông tin" />
       </label>
       <label>
         Trạng thái do em xác nhận
@@ -79,8 +89,8 @@ export function Proposal({
               group_id: row.data.group_id,
               status,
               summary,
-              frequency: null,
-              reported_impact: null,
+              frequency: frequency.trim() || null,
+              reported_impact: impact.trim() || null,
             },
           })
         }
@@ -131,7 +141,7 @@ export function Plan({
         >
           {available.map((g, i) => (
             <option key={g} value={g}>
-              Nội dung {i + 1}
+              {g} · {groups.find((item) => item.id === g)?.name}
             </option>
           ))}
         </select>

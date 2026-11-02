@@ -25,3 +25,5 @@ Cập nhật LLM thật theo yêu cầu tiếp theo: xem LOCAL_LLM.md. MODEL_MOD
 Cập nhật giao diện/lớp/kiến thức: UI tách học sinh (Trò chuyện, Nhận xét, Kế hoạch) và người phụ trách; có lớp mẫu 40 mã, thống kê phạm vi lớp và phân công tư vấn demo các mã lẻ. Mock đang bật; provider đích OpenAI Responses API. Các thiết lập và giới hạn trong OPENAI_AND_CLASSROOM.md thay cho mô tả local-only trước đó. Kho chín nguồn/sáu bản đối chiếu có phiên bản trong PostgreSQL; xem KNOWLEDGE_BASE.md. Chưa có API key, chưa xác nhận một lần gọi OpenAI thật. APP_MODE=live/pilot vẫn bị khóa.
 
 Cập nhật sau cung cấp key: đã xác minh OpenAI Responses thật với dữ liệu giả và toàn bộ luồng HS39. Có bộ nhớ hội thoại ngắn trong RAM (sáu tin nhắn, tối đa 30 phút, xóa khi close/withdraw/delete); không lưu chat thô vào DB. Cấu hình APP_MODE=demo vẫn giữ nguyên, chưa pilot. Xem OPENAI_AND_CLASSROOM.md cho trạng thái hiện tại.
+
+Cập nhật bảng nhóm giáo viên: quyền theo từng mã HS chỉ gồm mã/tên nhóm được xác nhận có trải nghiệm, sau đồng thuận chia sẻ riêng; hồ sơ cũ cần đồng ý lại. Không trả chat, tóm tắt hoặc nhận xét nháp cho giáo viên. Xem OPENAI_AND_CLASSROOM.md cho luồng hiện tại.

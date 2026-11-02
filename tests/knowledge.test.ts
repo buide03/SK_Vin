@@ -14,6 +14,11 @@ import {
 import { makeDb } from "../src/server/db";
 import { Service, demoIdentities } from "../src/server/service";
 import { MockModelAdapter } from "../src/server/model/adapter";
+
+test("retrieval keeps all six relevant groups for overlapping reports instead of truncating to three", () => {
+  const selected = selectKnowledge(knowledgeEntries, "khó dừng, cô đơn, sức khỏe, niềm tin, chuyên gia, người yêu", [], true);
+  assert.deepEqual(new Set(selected.map((e) => e.group_id)), new Set(["G01", "G02", "G03", "G04", "G05", "G06"]));
+});
 test("six groups have traceable references, boundaries and counter-examples; drafts cannot pass approved-only retrieval", () => {
   assert.equal(knowledgeEntries.length, 6);
   assert.equal(knowledgeMatrix.length, 6);

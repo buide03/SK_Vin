@@ -1005,3 +1005,11 @@ article > button {
     flex-basis: 100%;
   }
 }
+.student-group-scroll { max-height: 480px; overflow: auto; }
+.student-group-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.student-group-table th, .student-group-table td { padding: 12px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid #e7ece8; overflow-wrap: anywhere; }
+.student-group-table thead th { position: sticky; top: 0; background: white; }
+.student-group-table th:first-child { width: 72px; }
+.confirmed-group-item + .confirmed-group-item { margin-top: 10px; }
+.confirmed-group-item small { display: block; color: #7a8b80; margin-top: 4px; }
+.confirmed-groups-panel { margin: 20px 0; }

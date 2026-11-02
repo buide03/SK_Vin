@@ -9,6 +9,45 @@ import {
 import { Service, demoIdentities } from "../src/server/service";
 import { observationWindow } from "../src/server/assessment/window";
 import { ModelQueue } from "../src/server/model/queue";
+import { randomUUID } from "node:crypto";
+
+test("teacher sees only current confirmed present groups after sharing consent, with no raw profile data", async () => {
+  const db = await makeDb();
+  try {
+    const service = new Service(db), teacher = demoIdentities[3];
+    const student = demoIdentities.find((who) => who.id === classRoster[0].id)!;
+    let version = 0;
+    const go = async (op: string, payload: unknown = {}) => {
+      const result = await service.execute(student, { op, payload, version, key: randomUUID() });
+      version = result.version;
+      return result;
+    };
+    const visible = async () => (await classroomSummary(db, teacher)).student_groups!.find((r) => r.code === "HS01")!;
+    assert.deepEqual((await visible()).groups, []);
+    await go("consent", { accepted: true });
+    const session = await go("session");
+    await go("message", { session_id: session.id, sequence: 0, text: "Em dùng AI và khó dừng, ngủ muộn", group: "G01" });
+    assert.deepEqual((await visible()).groups, []);
+    let proposal = (await service.profile(student)).find((r) => r.kind === "proposal")!;
+    const observation = { group_id: "G01", status: "reported_present", summary: "PRIVATE_SUMMARY_MARKER", frequency: "5 tối", reported_impact: "PRIVATE_IMPACT_MARKER" };
+    await go("confirm", { proposal_id: proposal.id, observation });
+    assert.deepEqual((await visible()).groups.map((g) => g.id), ["G01"]);
+    assert.doesNotMatch(JSON.stringify((await classroomSummary(db, teacher)).student_groups), /PRIVATE_|summary|reported_impact|frequency/);
+    assert.equal((await classroomSummary(db, demoIdentities[4])).student_groups, undefined);
+    await db.query("UPDATE records SET data=data-'teacher_groups_allowed' WHERE student_id=$1 AND kind='consent'", [student.id]);
+    assert.deepEqual((await visible()).groups, []);
+    await go("consent", { accepted: true });
+    assert.deepEqual((await visible()).groups.map((g) => g.id), ["G01"]);
+    await go("message", { session_id: session.id, sequence: 1, text: "Em dùng AI và muốn sửa thông tin", group: "G01" });
+    proposal = (await service.profile(student)).find((r) => r.kind === "proposal")!;
+    await go("confirm", { proposal_id: proposal.id, observation: { ...observation, status: "reported_absent" } });
+    assert.deepEqual((await visible()).groups, []);
+    assert.equal((await visible()).reviewed, true);
+    await go("withdraw");
+    assert.equal((await visible()).reviewed, false);
+    assert.deepEqual((await visible()).groups, []);
+  } finally { await db.close(); }
+});
 test("40 independent students, seeded once, class counts and SQL match reference", async () => {
   const db = await makeDb();
   try {

@@ -57,6 +57,8 @@ test("student full journey, privacy withdrawal, role protection", async ({
     .getByRole("button", { name: "Hồ sơ của tôi", exact: true })
     .click();
   await page.getByLabel("Em sửa bản tóm tắt").fill("Bản sửa được em xác nhận");
+  await page.getByLabel("Tần suất em tự mô tả").fill("5 tối trong tuần");
+  await page.getByLabel("Ảnh hưởng em tự mô tả").fill("Buồn ngủ vào buổi sáng");
   await page
     .getByLabel("Trạng thái do em xác nhận")
     .selectOption("reported_present");
@@ -66,6 +68,13 @@ test("student full journey, privacy withdrawal, role protection", async ({
   await expect(
     page.getByText("Bản sửa được em xác nhận", { exact: true }),
   ).toBeVisible();
+  const saved = (await (await page.request.get("/api/app")).json()).rows.find((r: any) => r.kind === "observation" && r.data.current);
+  expect(saved.data.frequency).toBe("5 tối trong tuần");
+  expect(saved.data.reported_impact).toBe("Buồn ngủ vào buổi sáng");
+  await page.locator("#identity").selectOption("demo-teacher");
+  await expect(page.locator('[data-student-code="HS02"]')).toContainText("G01");
+  await expect(page.locator('[data-student-code="HS02"]')).not.toContainText("Bản sửa được em xác nhận");
+  await page.locator("#identity").selectOption("demo-class40-02");
   await page
     .getByRole("button", { name: "Kế hoạch & tiến triển", exact: true })
     .click();
@@ -96,7 +105,10 @@ test("class of 40: admin sample data, teacher aggregates and no personal profile
   await expect(
     page.getByRole("heading", { name: "Tổng quan lớp học" }),
   ).toBeVisible();
-  await expect(page.locator(".student-tile")).toHaveCount(40);
+  await expect(page.locator("[data-student-code]")).toHaveCount(40);
+  await expect(page.locator('[data-student-code="HS01"]')).toContainText("G01");
+  await expect(page.locator('[data-student-code="HS01"]')).not.toContainText("G02");
+  await expect(page.locator('[data-student-code="HS11"]')).toContainText("G02");
   await expect(
     page.getByRole("button", { name: "Hồ sơ của tôi", exact: true }),
   ).toHaveCount(0);

@@ -17,7 +17,7 @@ npm run seed
 npm run dev
 ```
 
-Mở http://127.0.0.1:3000 . Chọn HS01–HS40, đồng ý và trò chuyện. Mở Nhận xét để sửa/xác nhận, sau đó chọn Kế hoạch. Chọn Quản trị → Lớp học → Nạp lớp mẫu để có bộ dữ liệu giả 40 học sinh; Giáo viên xem thống kê tổng hợp, Quản trị → Kiến thức xem sáu nhóm và chín nguồn. Có thể rút đồng thuận/xóa ngay trên giao diện. Mock cố ý không tự gán hiện diện; học sinh tự chọn trạng thái.
+Mở http://127.0.0.1:3000 . Chọn HS01–HS40, đồng ý và trò chuyện. Mở Nhận xét để sửa/xác nhận, sau đó chọn Kế hoạch. Chọn Quản trị → Lớp học → Nạp lớp mẫu để có bộ dữ liệu giả 40 học sinh; Giáo viên xem thống kê tổng hợp và nhóm của từng mã HS đã đồng ý chia sẻ/xác nhận, Quản trị → Kiến thức xem sáu nhóm và chín nguồn. Có thể rút đồng thuận/xóa ngay trên giao diện. Mock cố ý không tự gán hiện diện; học sinh tự chọn trạng thái.
 
 Máy hiện tại thiếu lệnh npm trong PATH. Có thể thay `npm` bằng `node C:\Users\Admin\.cache\sk-vin-npm\package\bin\npm-cli.js`. Tiện ích bootstrap nằm ngoài repo; khi chuyển máy nên cài Node/npm thông thường. Không cần API key, Docker hoặc PostgreSQL server để chạy demo. PGlite lưu bền ở .data/pg, không đưa vào Git. Chỉ một tiến trình truy cập data directory; dừng server trước chạy seed. Seed có bốn hồ sơ giả (nhiều nhóm/vắng mặt/bỏ qua/mâu thuẫn), chạy lại không tăng bản ghi. A/B dùng để thao tác hành trình; seed fixture dùng cho báo cáo và test. Không tự tạo tài khoản thật.
 
